@@ -17,12 +17,15 @@ DELIMITER ;
 USE `consultas`;
 DROP procedure IF EXISTS `InsertProducto`;
 
+USE `consultas`;
+DROP procedure IF EXISTS `InsertProducto`;
+
 DELIMITER $$
 USE `consultas`$$
 CREATE PROCEDURE `InsertProducto`(
 	IN nombre VARCHAR (30),
 	IN valor DOUBLE,
-    IN fabricante VARCHAR (30)
+    IN fabricante INT
 )
 BEGIN
 	INSERT INTO Producto (nombre,precio,codigo_fabricante)
@@ -30,3 +33,9 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+SELECT nombre FROM producto;
+SELECT nombre, precio
+FROM producto;
+
+DESCRIBE producto;
