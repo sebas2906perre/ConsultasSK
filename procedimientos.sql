@@ -181,6 +181,7 @@ SELECT nombre FROM producto WHERE nombre LIKE '%Portátil%';
 -- 35
 SELECT nombre 
 FROM producto 
+
 WHERE nombre LIKE '%Monitor%'
 AND precio < 215;
 
@@ -190,12 +191,272 @@ FROM producto
 WHERE precio >= 100
 ORDER BY precio DESC, nombre ASC;
 
--- 1 Consultas multitabla (Composición interna) KIKE
--- 13 Consultas multitabla (Composición interna) KIKE
--- 1 Consultas multitabla (Composición externa) KIKE 
--- 3 Consultas multitabla (Composición externa) KIKE 
--- 1 Consultas resumen KIKE
--- 17 Consultas resumen KIKE
+-- 1 Consultas multitabla (Composición interna) 
+-- 1
+SELECT 
+    p.nombre AS Producto,
+    p.precio,
+    m.nombre AS fabricante
+FROM 
+    Producto p
+JOIN 
+    fabricante m ON p.codigo_fabricante = m.codigo; 
+    
+-- 2
+SELECT 
+    p.nombre AS Producto,
+    p.precio,
+    m.nombre AS fabricante
+FROM 
+    Producto p
+JOIN 
+    fabricante m ON p.codigo_fabricante = m.codigo
+    ORDER BY 
+    m.nombre ASC;
+    
+    -- 3 
+    
+    SELECT 
+    p.codigo AS id_producto,
+    p.nombre AS nombre_producto,
+    m.codigo AS id_fabricante,
+    m.nombre AS nombre_fabricante
+FROM 
+    Producto p
+JOIN 
+    fabricante m ON p.codigo_fabricante = m.codigo;
+
+-- 4 
+SELECT 
+    p.nombre AS Producto,
+    p.precio,
+    m.nombre AS fabricante
+FROM 
+    Producto p
+JOIN 
+    fabricante m ON p.codigo_fabricante = m.codigo
+    ORDER BY 
+    p.precio ASC
+    LIMIT 1;
+    -- 5
+SELECT 
+    p.nombre AS Producto,
+    p.precio,
+    m.nombre AS fabricante
+FROM 
+    Producto p
+JOIN 
+    fabricante m ON p.codigo_fabricante = m.codigo
+    ORDER BY 
+    p.precio DESC
+    LIMIT 1;
+-- 6
+SELECT 
+    p.nombre AS Producto,
+    p.precio,
+    m.nombre AS fabricante
+FROM 
+    Producto p
+JOIN 
+    fabricante m ON p.codigo_fabricante = m.codigo
+WHERE 
+m.nombre = 'Lenovo';
+
+-- 7
+SELECT 
+    p.nombre AS Producto,
+    p.precio,
+    m.nombre AS fabricante
+FROM 
+    Producto p
+JOIN 
+    fabricante m ON p.codigo_fabricante = m.codigo
+WHERE 
+m.nombre = 'Crucial'
+AND p.precio > 200;
+
+-- 8
+SELECT 
+    p.nombre AS Producto,
+    p.precio,
+    m.nombre AS fabricante
+FROM 
+    Producto p
+JOIN 
+    fabricante m ON p.codigo_fabricante = m.codigo
+WHERE 
+m.nombre = 'Asus'
+OR m.nombre = 'Hewlett-Packard'
+OR m.nombre = 'Seagate';
+
+-- 9 
+SELECT 
+    p.nombre AS Producto,
+    p.precio,
+    m.nombre AS fabricante
+FROM 
+    Producto p
+JOIN 
+    fabricante m ON p.codigo_fabricante = m.codigo
+WHERE m.nombre IN ('Asus', 'Hewlett-PAckard','Seagate');
+-- 10
+SELECT 
+    p.nombre AS Producto,
+    p.precio,
+    m.nombre AS fabricante
+FROM 
+    Producto p
+JOIN 
+    fabricante m ON p.codigo_fabricante = m.codigo
+WHERE m.nombre LIKE '%e';
+-- 11
+SELECT 
+    p.nombre AS Producto,
+    p.precio,
+    m.nombre AS fabricante
+FROM 
+    Producto p
+JOIN 
+    fabricante m ON p.codigo_fabricante = m.codigo
+WHERE m.nombre LIKE '%w%';
+-- 12
+SELECT 
+    p.nombre AS Producto,
+    p.precio,
+    m.nombre AS fabricante
+FROM 
+    Producto p
+JOIN 
+    fabricante m ON p.codigo_fabricante = m.codigo
+WHERE p.precio >=180
+ORDER BY p.precio DESC, p.precio ASC;
+-- 13
+
+SELECT codigo, nombre
+FROM fabricante
+WHERE codigo IN (SELECT DISTINCT codigo_fabricante FROM producto);
+
+-- Consultas multitabla (Composición externa)  
+
+-- 1 
+SELECT 
+    f.nombre AS nombre_fabricante,
+    p.nombre AS Producto
+FROM 
+    fabricante f 
+    left join producto p ON f.codigo = p.codigo_fabricante;
+    -- 2 
+    SELECT 
+    f.nombre AS nombre_fabricante,
+    p.nombre AS Producto
+FROM 
+    fabricante f 
+    left join producto p ON f.codigo = p.codigo_fabricante
+    WHERE p.codigo IS NULL;
+    -- 3 Si podrian existir productod que no esten relacionados con un fabricante ya que es la clave foranea en la tabla producto, donde la columna codigo_fabricante en la tabla producto es la que establece la relacion con la columna codigo de la tabla fabricantes.
+ 
+-- Consultas resumen 
+
+-- 1
+SELECT COUNT(*) AS total_productos
+FROM producto;
+
+-- 2 
+SELECT COUNT(*) AS total_fabricantes
+FROM fabricante;
+
+-- 3
+SELECT COUNT(DISTINCT codigo_fabricante) AS total_fabricantes_distintos
+FROM producto;
+
+-- 4
+SELECT AVG(precio) AS precio_medio
+FROM producto;
+
+-- 5
+SELECT MIN(precio) AS precio_mas_barato
+FROM producto;
+
+-- 6
+SELECT MAX(precio) AS precio_mas_caro
+FROM producto;
+
+-- 7
+SELECT nombre, precio
+FROM producto
+ORDER BY precio ASC
+LIMIT 1;
+
+-- 8
+SELECT nombre, precio
+FROM producto
+ORDER BY precio DESC
+LIMIT 1;
+
+-- 9
+SELECT SUM(precio) AS suma_precios
+FROM producto;
+
+-- 10
+SELECT COUNT(p.codigo) AS numero_productos_asus
+FROM producto p
+JOIN fabricante f ON p.codigo_fabricante = f.codigo
+WHERE f.nombre = 'Asus';
+
+-- 11
+SELECT AVG(p.precio) AS precio_medio_asus
+FROM producto p
+JOIN fabricante f ON p.codigo_fabricante = f.codigo
+WHERE f.nombre = 'Asus';
+
+-- 12
+SELECT min(p.precio) AS precio_medio_asus
+FROM producto p
+JOIN fabricante f ON p.codigo_fabricante = f.codigo
+WHERE f.nombre = 'Asus';
+
+-- 13
+SELECT max(p.precio) AS precio_medio_asus
+FROM producto p
+JOIN fabricante f ON p.codigo_fabricante = f.codigo
+WHERE f.nombre = 'Asus';
+
+-- 14
+SELECT sum(p.precio) AS precio_medio_asus
+FROM producto p
+JOIN fabricante f ON p.codigo_fabricante = f.codigo
+WHERE f.nombre = 'Asus';
+
+-- 15
+SELECT
+    MAX(p.precio) AS precio_maximo_crucial,
+    MIN(p.precio) AS precio_minimo_crucial,
+    AVG(p.precio) AS precio_medio_crucial,
+    COUNT(p.codigo) AS total_productos_crucial
+FROM producto p
+JOIN fabricante f ON p.codigo_fabricante = f.codigo
+WHERE f.nombre = 'Crucial';
+
+-- 16
+SELECT
+    f.nombre AS nombre_fabricante,
+    COUNT(p.codigo) AS numero_productos
+FROM fabricante f
+LEFT JOIN producto p ON f.codigo = p.codigo_fabricante
+GROUP BY f.nombre
+ORDER BY numero_productos DESC;
+-- 17
+SELECT
+    f.nombre AS nombre_fabricante,
+    MAX(p.precio) AS precio_maximo,
+    MIN(p.precio) AS precio_minimo,
+    AVG(p.precio) AS precio_medio
+FROM fabricante f
+LEFT JOIN producto p ON f.codigo = p.codigo_fabricante
+GROUP BY f.nombre;
+
+
+
 -- 18 
 SELECT
 codigo_fabricante,
